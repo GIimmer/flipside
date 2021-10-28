@@ -1,7 +1,10 @@
+using Flipside_Server.Data;
+using Flipside_Server.GraphQL;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -26,7 +29,10 @@ namespace Flipside_Server
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddControllers();
+            services
+                .AddDbContext<AppDbContext>(opt => opt.UseNpgsql(Configuration.GetConnectionString("FlipsideConString")))
+                .AddGraphQLServer()
+                .AddQueryType<Query>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -37,16 +43,21 @@ namespace Flipside_Server
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
+            // app.UseHttpsRedirection();
 
-            app.UseRouting();
+            app.UseRouting()
+                .UseEndpoints(endpoints =>
+                {
+                    endpoints.MapGraphQL();
+                });
 
-            app.UseAuthorization();
+            // app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            // app.UseEndpoints(endpoints =>
+            // {
+            //     // endpoints.MapControllers();
+            //     endpoints.MapGraphQL();
+            // });
         }
     }
 }
