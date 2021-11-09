@@ -7,16 +7,20 @@ using System.Threading.Tasks;
 
 namespace Flipside_Server.GraphQL
 {
-    public class Debate
+    public class Resolution
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         [Required]
-        public User Creator { get; set; }
+        public string Text { get; set; }
 
-        public ICollection<Argument> Arguments { get; set; } = new List<Argument>();
+        [Required]
+        public Debate Debate { get; set; }
+
+        [Required]
+        public string SpiritOfTheResolution { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime CreatedAt { get; set; }

@@ -10,10 +10,9 @@ namespace Flipside_Server.Data
 
     } 
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) 
-    => optionsBuilder
-        .UseSnakeCaseNamingConvention();
-
     public DbSet<Debate> Debates { get; set; }
+    public DbSet<Resolution> Resolutions { get; set; }
+    public DbSet<User> Users { get; set; }
+    public DbSet<Argument> Arguments { get; set; }
   }
 }

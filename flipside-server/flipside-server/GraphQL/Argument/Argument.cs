@@ -1,4 +1,5 @@
-﻿using System;
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -7,16 +8,23 @@ using System.Threading.Tasks;
 
 namespace Flipside_Server.GraphQL
 {
-    public class Debate
+    public class Argument
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
+        
+        [Required]
+        public Debate Debate { get; set; }
 
         [Required]
-        public User Creator { get; set; }
+        public User Author { get; set; }
 
-        public ICollection<Argument> Arguments { get; set; } = new List<Argument>();
+        [Required]
+        public string Title { get; set; }
+
+        [Required]
+        public string TextContent { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime CreatedAt { get; set; }

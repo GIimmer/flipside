@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using GraphQL.Server.Ui.Voyager;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -30,7 +31,10 @@ namespace Flipside_Server
         {
 
             services
-                .AddDbContext<AppDbContext>(opt => opt.UseNpgsql(Configuration.GetConnectionString("FlipsideConString")))
+                .AddPooledDbContextFactory<AppDbContext>(opt => opt
+                    .UseNpgsql(Configuration.GetConnectionString("FlipsideConString"))
+                    .UseSnakeCaseNamingConvention()
+                )
                 .AddGraphQLServer()
                 .AddQueryType<Query>();
         }
@@ -49,7 +53,7 @@ namespace Flipside_Server
                 .UseEndpoints(endpoints =>
                 {
                     endpoints.MapGraphQL();
-                });
+                }).UseGraphQLVoyager();
 
             // app.UseAuthorization();
 
