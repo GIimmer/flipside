@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Flipside_Server.GraphQL
 {
-    public class Debate
+    public class Comment
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -14,7 +14,10 @@ namespace Flipside_Server.GraphQL
         [Required]
         public User Creator { get; set; }
 
-        public ICollection<Argument> Arguments { get; set; } = new List<Argument>();
+        [Required]
+        [Column(TypeName = "VARCHAR")]
+        [StringLength(1000)]
+        public string TextContent { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime CreatedAt { get; set; }

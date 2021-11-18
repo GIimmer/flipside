@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Flipside_Server.Migrations
 {
-    public partial class AddUserResArgDebate : Migration
+    public partial class AddStarterTables : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -16,11 +16,32 @@ namespace Flipside_Server.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     name = table.Column<string>(type: "text", nullable: false),
                     email = table.Column<string>(type: "text", nullable: false),
-                    created_at = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                    created_at = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "NOW()")
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("pk_users", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "comments",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    creator_id = table.Column<int>(type: "integer", nullable: true),
+                    text_content = table.Column<string>(type: "VARCHAR", maxLength: 1000, nullable: false),
+                    created_at = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "NOW()")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_comments", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_comments_users_creator_id",
+                        column: x => x.creator_id,
+                        principalTable: "users",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -30,7 +51,7 @@ namespace Flipside_Server.Migrations
                     id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     creator_id = table.Column<int>(type: "integer", nullable: true),
-                    created_at = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                    created_at = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "NOW()")
                 },
                 constraints: table =>
                 {
@@ -53,7 +74,7 @@ namespace Flipside_Server.Migrations
                     author_id = table.Column<int>(type: "integer", nullable: true),
                     title = table.Column<string>(type: "text", nullable: false),
                     text_content = table.Column<string>(type: "text", nullable: false),
-                    created_at = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                    created_at = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "NOW()")
                 },
                 constraints: table =>
                 {
@@ -81,7 +102,7 @@ namespace Flipside_Server.Migrations
                     text = table.Column<string>(type: "text", nullable: false),
                     debate_id = table.Column<int>(type: "integer", nullable: true),
                     spirit_of_the_resolution = table.Column<string>(type: "text", nullable: false),
-                    created_at = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                    created_at = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "NOW()")
                 },
                 constraints: table =>
                 {
@@ -105,6 +126,11 @@ namespace Flipside_Server.Migrations
                 column: "debate_id");
 
             migrationBuilder.CreateIndex(
+                name: "ix_comments_creator_id",
+                table: "comments",
+                column: "creator_id");
+
+            migrationBuilder.CreateIndex(
                 name: "ix_debates_creator_id",
                 table: "debates",
                 column: "creator_id");
@@ -119,6 +145,9 @@ namespace Flipside_Server.Migrations
         {
             migrationBuilder.DropTable(
                 name: "arguments");
+
+            migrationBuilder.DropTable(
+                name: "comments");
 
             migrationBuilder.DropTable(
                 name: "resolutions");

@@ -14,5 +14,6 @@ namespace Flipside_Server.Data
     public DbSet<Resolution> Resolutions { get; set; }
     public DbSet<User> Users { get; set; }
     public DbSet<Argument> Arguments { get; set; }
+    public DbSet<Comment> Comments { get; set; }
   }
 }

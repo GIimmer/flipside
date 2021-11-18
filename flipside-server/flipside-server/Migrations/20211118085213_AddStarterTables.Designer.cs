@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Flipside_Server.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20211109085946_AddUserResArgDebate")]
-    partial class AddUserResArgDebate
+    [Migration("20211118085213_AddStarterTables")]
+    partial class AddStarterTables
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -62,6 +62,38 @@ namespace Flipside_Server.Migrations
                         .HasDatabaseName("ix_arguments_debate_id");
 
                     b.ToTable("arguments");
+                });
+
+            modelBuilder.Entity("Flipside_Server.GraphQL.Comment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<int?>("CreatorId")
+                        .HasColumnType("integer")
+                        .HasColumnName("creator_id");
+
+                    b.Property<string>("TextContent")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("VARCHAR")
+                        .HasColumnName("text_content");
+
+                    b.HasKey("Id")
+                        .HasName("pk_comments");
+
+                    b.HasIndex("CreatorId")
+                        .HasDatabaseName("ix_comments_creator_id");
+
+                    b.ToTable("comments");
                 });
 
             modelBuilder.Entity("Flipside_Server.GraphQL.Debate", b =>
@@ -172,6 +204,16 @@ namespace Flipside_Server.Migrations
                     b.Navigation("Author");
 
                     b.Navigation("Debate");
+                });
+
+            modelBuilder.Entity("Flipside_Server.GraphQL.Comment", b =>
+                {
+                    b.HasOne("Flipside_Server.GraphQL.User", "Creator")
+                        .WithMany()
+                        .HasForeignKey("CreatorId")
+                        .HasConstraintName("fk_comments_users_creator_id");
+
+                    b.Navigation("Creator");
                 });
 
             modelBuilder.Entity("Flipside_Server.GraphQL.Debate", b =>
