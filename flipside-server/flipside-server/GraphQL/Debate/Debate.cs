@@ -14,6 +14,11 @@ namespace Flipside_Server.GraphQL
         [Required]
         public User Creator { get; set; }
 
+        [Required]
+        public string Resolution { get; set; }
+
+        public string SpiritOfTheResolution { get; set; }
+
         public ICollection<Argument> Arguments { get; set; } = new List<Argument>();
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
